@@ -22,7 +22,7 @@ public class SoundmasterOptionsScreen extends Screen {
     private EntryList entryList;
 
     public SoundmasterOptionsScreen(GameOptions gameOptions) {
-        super(Text.literal("Manage Whitelisted Music"));
+        super(Text.translatable("soundmaster.managelabel"));
 
         this.gameOptions = gameOptions;
     }
@@ -58,7 +58,7 @@ public class SoundmasterOptionsScreen extends Screen {
     private void addDoneButton() {
         int w = clamp(width, 50, 200);
 
-        doneButton = ButtonWidget.builder(ScreenTexts.DONE, (button) -> {
+        doneButton = ButtonWidget.builder(Text.translatable("soundmaster.done"), (button) -> {
             this.close();
         }).dimensions(this.width / 2 - (w / 2), this.height - 28, w, 20).build();
 
@@ -75,7 +75,7 @@ public class SoundmasterOptionsScreen extends Screen {
 
         });
 
-        button.setTooltip(Tooltip.of(Text.literal("Add button not implemented yet, sorry!")));
+        button.setTooltip(Tooltip.of(Text.translatable("soundmaster.notimplemented")));
 
         this.addDrawableChild(button);
     }
@@ -94,7 +94,7 @@ public class SoundmasterOptionsScreen extends Screen {
             entryList.init();
         });
 
-        button.setTooltip(Tooltip.of(Text.literal("Reset to default settings")));
+        button.setTooltip(Tooltip.of(Text.translatable("soundmaster.resetsettings")));
 
         this.addDrawableChild(button);
     }

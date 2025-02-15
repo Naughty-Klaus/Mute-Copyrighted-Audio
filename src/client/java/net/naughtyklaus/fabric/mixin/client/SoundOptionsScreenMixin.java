@@ -31,10 +31,12 @@ public abstract class SoundOptionsScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     private void addCustomButtons(CallbackInfo ci) {
+        Text text = Text.translatable("soundmaster.title");
+
         SimpleOption<Boolean> muteCopyrightedAudioOption = new SimpleOption<>(
-                "Mute Copyrighted Audio",
-                SimpleOption.constantTooltip(Text.of("Toggle to mute certain songs.")),
-                (optionText, enabled) -> Text.of(enabled ? "ON" : "OFF"),
+                text.getString(),
+                SimpleOption.constantTooltip(Text.translatable("soundmaster.toggletooltip")),
+                (optionText, enabled) -> enabled ? Text.translatable("soundmaster.on") : Text.translatable("soundmaster.off"),
                 new SimpleOption.PotentialValuesBasedCallbacks<>(List.of(true, false), Codec.BOOL),
                 Config.doesMuteCopyrightedAudio(),
                 this::handleMuteOptionChange

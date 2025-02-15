@@ -1,6 +1,10 @@
 {
-  "item.adventurepack.copper_coin": "Copper Coin",
-  "item.adventurepack.silver_coin": "Silver Coin",
-  "item.adventurepack.gold_coin": "Gold Coin",
-  "item.adventurepack.item_group": "NK's Adventure Pack"
+  "soundmaster.managelabel": "Manage Whitelisted Music",
+  "soundmaster.done": "Done",
+  "soundmaster.notimplemented": "Not implemented yet, sorry!",
+  "soundmaster.resetsettings": "Reset whitelist",
+  "soundmaster.title": "Whitelisted Music Only",
+  "soundmaster.toggletooltip": "When enabled, only whitelisted music will play.",
+  "soundmaster.on": "ON",
+  "soundmaster.off": "OFF"
 }
