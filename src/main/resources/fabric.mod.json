@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "soundmaster",
+  "version": "${version}",
+  "name": "Mute Copyrighted Audio",
+  "description": "Add an option to sound options to mute music that triggers YouTube's ContentID system.",
+  "authors": ["NaughtyKlaus"],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/soundmaster/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "net.naughtyklaus.fabric.client.SoundmasterClient"
+    ],
+    "modmenu": [ "net.naughtyklaus.fabric.config.ModMenuIntegration" ]
+  },
+  "mixins": [
+    "soundmaster.mixins.json",
+    {
+      "config": "soundmaster.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabric-api": ">=0.92.3+1.20.1",
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  },
+  "recommends": {
+    "modmenu": ["*"]
+  },
+  "suggests": {
+    "modmenu": ["*"]
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "Contact": "https://naughtyklaus.net/"
+      },
+      "badges": [],
+      "update_checker": false
+    }
+  }
+}
