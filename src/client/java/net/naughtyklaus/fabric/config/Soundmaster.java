@@ -6,6 +6,41 @@ public class Soundmaster {
     public static SoundInstance lastMusicSoundInst;
 
     public static final String[] DEFAULT_ALLOWED_MUSIC_FILES = new String[]{
+            "minecraft:sounds/music/game/calm1.ogg",
+            "minecraft:sounds/music/game/calm2.ogg",
+            "minecraft:sounds/music/game/calm3.ogg",
+            "minecraft:sounds/music/game/creative/creative1.ogg",
+            "minecraft:sounds/music/game/creative/creative2.ogg",
+            "minecraft:sounds/music/game/creative/creative3.ogg",
+            "minecraft:sounds/music/game/creative/creative4.ogg",
+            "minecraft:sounds/music/game/creative/creative5.ogg",
+            "minecraft:sounds/music/game/creative/creative6.ogg",
+            "minecraft:sounds/music/game/end/boss.ogg",
+            "minecraft:sounds/music/game/end/credits.ogg",
+            "minecraft:sounds/music/game/end/end.ogg",
+            "minecraft:sounds/music/game/hal1.ogg",
+            "minecraft:sounds/music/game/hal2.ogg",
+            "minecraft:sounds/music/game/hal3.ogg",
+            "minecraft:sounds/music/game/hal4.ogg",
+            "minecraft:sounds/music/game/nether/nether1.ogg",
+            "minecraft:sounds/music/game/nether/nether2.ogg",
+            "minecraft:sounds/music/game/nether/nether3.ogg",
+            "minecraft:sounds/music/game/nether/nether4.ogg",
+            "minecraft:sounds/music/game/nuance1.ogg",
+            "minecraft:sounds/music/game/nuance2.ogg",
+            "minecraft:sounds/music/game/piano1.ogg",
+            "minecraft:sounds/music/game/piano2.ogg",
+            "minecraft:sounds/music/game/piano3.ogg",
+            "minecraft:sounds/music/menu/menu1.ogg",
+            "minecraft:sounds/music/menu/menu2.ogg",
+            "minecraft:sounds/music/menu/menu3.ogg",
+            "minecraft:sounds/music/menu/menu4.ogg",
+            "minecraft:sounds/music/game/water/axolotl.ogg",
+            "minecraft:sounds/music/game/water/dragon_fish.ogg",
+            "minecraft:sounds/music/game/water/shuniji.ogg",
+            "minecraft:sounds/music/game/end/the_end.ogg",
+            "minecraft:sounds/music/game/end/alpha.ogg",
+            // Depending on the version of (fabric?, or minecraft?) music files use bedrock edition file names.
             "minecraft:sounds/music/game/minecraft.ogg",
             "minecraft:sounds/music/game/clark.ogg",
             "minecraft:sounds/music/game/sweden.ogg",
@@ -31,17 +66,22 @@ public class Soundmaster {
             "minecraft:sounds/music/game/nether/dead_voxel.ogg",
             "minecraft:sounds/music/game/nether/warmth.ogg",
             "minecraft:sounds/music/game/nether/ballad_of_the_cats.ogg",
-            "minecraft:sounds/music/game/nether/boss.ogg",
-            "minecraft:sounds/music/game/nether/the_end.ogg",
+            "minecraft:sounds/music/game/end/boss.ogg",
+            "minecraft:sounds/music/game/end/the_end.ogg",
             "minecraft:sounds/music/menu/mutation.ogg",
             "minecraft:sounds/music/menu/moog_city_2.ogg",
             "minecraft:sounds/music/menu/beginning_2.ogg",
             "minecraft:sounds/music/menu/floating_trees.ogg",
-            "minecraft:sounds/music/game/nether/alpha.ogg",
+            "minecraft:sounds/music/game/end/alpha.ogg",
             "minecraft:sounds/music/menu/menu1.ogg",
             "minecraft:sounds/music/menu/menu2.ogg",
             "minecraft:sounds/music/menu/menu3.ogg",
             "minecraft:sounds/music/menu/menu4.ogg",
             "minecraft:sounds/music/menu/credits.ogg"
     };
+
+    // Modded minecraft uses bedrock edition sound file names?
+    /*
+
+     */
 }

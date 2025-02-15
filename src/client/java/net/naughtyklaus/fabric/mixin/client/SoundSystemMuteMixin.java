@@ -5,9 +5,11 @@ import net.minecraft.client.sound.Sound;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
 import net.naughtyklaus.fabric.config.Config;
 import net.naughtyklaus.fabric.config.Soundmaster;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -26,13 +28,13 @@ public abstract class SoundSystemMuteMixin {
     private void onPlay(SoundInstance sound, CallbackInfo ci) {
         Sound sound2 = sound.getSound();
         Config config = Config.get();
+
         if (sound2 != null && sound2.getLocation() != null) {
             String loc = sound2.getLocation().toString();
             if (sound.getCategory() == SoundCategory.MUSIC) {
                 if (Config.doesMuteCopyrightedAudio()) {
-                    if (!config.allowedMusicFiles.contains(loc)) {
+                    if (!config.allowedMusicFiles.contains(loc))
                         ci.cancel();
-                    }
                 } else {
                     if (!config.allowedMusicFiles.contains(loc))
                         System.out.println("Playing Content ID'd music file: " + loc);

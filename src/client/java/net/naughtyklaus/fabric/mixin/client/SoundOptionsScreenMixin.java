@@ -49,7 +49,7 @@ public abstract class SoundOptionsScreenMixin extends Screen {
     private void handleMuteOptionChange(boolean newValue) {
         Config.setMuteCopyrightedAudio(newValue);
         Config config = Config.get();
-        if (newValue)
+        if (Config.doesMuteCopyrightedAudio())
             if (lastMusicSoundInst != null && lastMusicSoundInst.getSound() != null) {
                 if (!config.allowedMusicFiles.contains(lastMusicSoundInst.getSound().getLocation().toString()))
                     MinecraftClient.getInstance().getSoundManager().stop(lastMusicSoundInst);
