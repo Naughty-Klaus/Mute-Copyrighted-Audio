@@ -1,9 +1,32 @@
 package net.naughtyklaus.fabric.config;
 
 import net.minecraft.client.sound.SoundInstance;
+import net.naughtyklaus.fabric.client.music.MusicEnumerator;
+
+import java.util.*;
 
 public class Soundmaster {
-    public static SoundInstance lastMusicSoundInst;
+    public static final MusicEnumerator[] DEFAULT_ALLOWED_MUSIC;
+
+    static {
+        List<MusicEnumerator> combinedList = new ArrayList<>();
+        Collections.addAll(combinedList, MusicEnumerator.findByAuthor("minecraft", "C418"));
+
+        // Uncomment this to add the remainder of the vanilla Minecraft songs as music allowed by default.
+        /*
+        Collections.addAll(combinedList, MusicEnumerator.findByAuthor("minecraft", "Lena Raine"));
+        Collections.addAll(combinedList, MusicEnumerator.findByAuthor("minecraft", "Aaron Cherof"));
+        Collections.addAll(combinedList, MusicEnumerator.findByAuthor("minecraft", "Kumi Tanioka"));
+         */
+
+        Set<MusicEnumerator> uniqueMusicSet = new HashSet<>(combinedList);
+
+        DEFAULT_ALLOWED_MUSIC = uniqueMusicSet.toArray(new MusicEnumerator[0]);
+    }
+
+    /*
+
+    Kept in comments in case I need to use it later.
 
     public static final String[] DEFAULT_ALLOWED_MUSIC_FILES = new String[]{
             "minecraft:sounds/music/game/calm1.ogg",
@@ -78,10 +101,7 @@ public class Soundmaster {
             "minecraft:sounds/music/menu/menu3.ogg",
             "minecraft:sounds/music/menu/menu4.ogg",
             "minecraft:sounds/music/menu/credits.ogg"
-    };
+    };*/
+    public static SoundInstance lastMusicSoundInst;
 
-    // Modded minecraft uses bedrock edition sound file names?
-    /*
-
-     */
 }

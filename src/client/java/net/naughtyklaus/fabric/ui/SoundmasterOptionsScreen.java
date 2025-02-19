@@ -6,14 +6,12 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.option.GameOptions;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.naughtyklaus.fabric.config.Config;
+import net.naughtyklaus.fabric.config.Soundmaster;
 import net.naughtyklaus.fabric.ui.buttons.HoverableButton;
 
 import java.util.Arrays;
-
-import static net.naughtyklaus.fabric.config.Soundmaster.DEFAULT_ALLOWED_MUSIC_FILES;
 
 public class SoundmasterOptionsScreen extends Screen {
 
@@ -88,10 +86,7 @@ public class SoundmasterOptionsScreen extends Screen {
 
         HoverableButton button = new HoverableButton("reset", x1, y, 20, 20, (button1) -> {
             Config config = Config.get();
-            config.allowedMusicFiles.clear();
-            config.allowedMusicFiles.addAll(Arrays.asList(DEFAULT_ALLOWED_MUSIC_FILES));
-            entryList.children().clear();
-            entryList.init();
+            config.cyclePreset();
         });
 
         button.setTooltip(Tooltip.of(Text.translatable("soundmaster.resetsettings")));
@@ -116,6 +111,13 @@ public class SoundmasterOptionsScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+
+        if(Config.isUpdateNeeded()) {
+            this.entryList.setScrollAmount(0.0);
+            this.entryList.updateEntries();
+            Config.shouldUpdate(false);
+        }
+
         this.entryList.render(context, mouseX, mouseY, delta);
 
         super.render(context, mouseX, mouseY, delta);

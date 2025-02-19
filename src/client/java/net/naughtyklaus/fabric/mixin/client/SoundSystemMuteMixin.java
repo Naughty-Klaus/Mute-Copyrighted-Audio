@@ -5,11 +5,9 @@ import net.minecraft.client.sound.Sound;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
 import net.naughtyklaus.fabric.config.Config;
 import net.naughtyklaus.fabric.config.Soundmaster;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -29,19 +27,25 @@ public abstract class SoundSystemMuteMixin {
         Sound sound2 = sound.getSound();
         Config config = Config.get();
 
-        if (sound2 != null && sound2.getLocation() != null) {
+        if (sound2 != null && sound2.getLocation() != null && sound.getCategory() == SoundCategory.MUSIC) {
             String loc = sound2.getLocation().toString();
-            if (sound.getCategory() == SoundCategory.MUSIC) {
-                if (Config.doesMuteCopyrightedAudio()) {
-                    if (!config.allowedMusicFiles.contains(loc))
-                        ci.cancel();
-                } else {
-                    if (!config.allowedMusicFiles.contains(loc))
-                        System.out.println("Playing Content ID'd music file: " + loc);
+            String[] split = loc.split(":");
+            String namespace = "";
+            String path = "";
+
+            if (split.length > 1) {
+                namespace = split[0];
+                path = split[1];
+
+                path = path.substring(path.lastIndexOf('/') + 1);
+            }
+            if (Config.doesMuteCopyrightedAudio()) {
+                boolean isAllowed = config.isMusicAllowed(namespace, path);
+
+                if (!isAllowed) {
+                    ci.cancel();
                 }
             }
-        } else {
-            System.out.println("Sound or Sound Location is invalid");
         }
     }
 

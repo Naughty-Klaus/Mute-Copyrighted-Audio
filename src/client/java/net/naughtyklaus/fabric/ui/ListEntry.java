@@ -5,12 +5,15 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
+import net.naughtyklaus.fabric.client.music.MusicEnumerator;
 import net.naughtyklaus.fabric.config.Config;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static net.naughtyklaus.fabric.config.Soundmaster.lastMusicSoundInst;
 
@@ -19,23 +22,100 @@ public class ListEntry extends ElementListWidget.Entry<ListEntry> {
     public final ButtonWidget deleteButton;
     private final EntryList parent;
 
-    public ListEntry(EntryList parent, String label) {
-        this.label = label;
+    public ListEntry(EntryList parent, @NotNull MusicEnumerator e) {
         this.parent = parent;
+        this.label = e.getNamespace() + " - " + e.getAuthor() + " - " + e.getTitle();
+
         Config config = Config.get();
 
         this.deleteButton = new ButtonWidget.Builder(Text.literal("X"), button -> {
-            Config.removeAllowedMusicFile(label);
+            Config.removeAllowedMusic(e);
 
             if (Config.doesMuteCopyrightedAudio())
-                if (lastMusicSoundInst != null && lastMusicSoundInst.getSound() != null) {
-                    if (!config.allowedMusicFiles.contains(lastMusicSoundInst.getSound().getLocation().toString()))
+                if (lastMusicSoundInst != null && lastMusicSoundInst.getSound() != null && lastMusicSoundInst.getCategory() == SoundCategory.MUSIC) {
+                    String loc = lastMusicSoundInst.getSound().getLocation().toString();
+                    String[] split = loc.split(":");
+                    String namespace = "";
+                    String path = "";
+
+                    if (split.length > 1) {
+                        namespace = split[0];
+                        path = split[1];
+
+                        path = path.substring(path.lastIndexOf('/') + 1);
+                    }
+
+                    boolean isAllowed = config.isMusicAllowed(namespace, path);
+
+                    if (!isAllowed) {
                         MinecraftClient.getInstance().getSoundManager().stop(lastMusicSoundInst);
+                    }
                 }
 
             parent.children().remove(this);
             parent.updateEntries();
         }).dimensions(0, 0, 20, 20).build();
+    }
+
+    public ListEntry(EntryList parent, String file) {
+        this.parent = parent;
+        String[] ss = getNamespaceAndPath(file);
+
+        String namespace = ss[0];
+        String path = ss[1];
+
+        final MusicEnumerator e = MusicEnumerator.findOrRegister(namespace, "", "", path);
+
+        if (Objects.equals(e.getAuthor(), "")) {
+            this.label = namespace + ":" + path;
+        } else {
+            this.label = namespace + " - " + e.getAuthor() + " - " + e.getTitle();
+        }
+
+        Config config = Config.get();
+
+        this.deleteButton = new ButtonWidget.Builder(Text.literal("X"), button -> {
+            Config.removeAllowedMusic(e);
+
+            if (Config.doesMuteCopyrightedAudio())
+                if (lastMusicSoundInst != null && lastMusicSoundInst.getSound() != null) {
+                    String loc = lastMusicSoundInst.getSound().getLocation().toString();
+                    String[] split = loc.split(":");
+                    String namespace1 = "";
+                    String path1 = "";
+
+                    if (split.length > 1) {
+                        namespace1 = split[0];
+                        path1 = split[1];
+
+                        path1 = path1.substring(path1.lastIndexOf('/') + 1);
+                    }
+
+                    boolean isAllowed = config.isMusicAllowed(namespace1, path1);
+
+                    if (!isAllowed) {
+                        MinecraftClient.getInstance().getSoundManager().stop(lastMusicSoundInst);
+                    }
+                }
+
+            parent.children().remove(this);
+            parent.updateEntries();
+        }).dimensions(0, 0, 20, 20).build();
+    }
+
+    public String[] getNamespaceAndPath(String file) {
+        String[] split = file.split(":");
+        String namespace = null;
+        String path = null;
+
+        if (split.length > 1) {
+            namespace = split[0];
+            path = split[1];
+
+            path = path.substring(path.lastIndexOf('/') + 1);
+        }
+
+        return new String[]{namespace, path};
     }
 
     @Override

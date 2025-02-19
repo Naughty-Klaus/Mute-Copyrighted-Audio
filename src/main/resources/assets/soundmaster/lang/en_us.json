@@ -2,7 +2,7 @@
   "soundmaster.managelabel": "Manage Whitelisted Music",
   "soundmaster.done": "Done",
   "soundmaster.notimplemented": "Not implemented yet, sorry!",
-  "soundmaster.resetsettings": "Reset whitelist",
+  "soundmaster.resetsettings": "Cycle preset - This will clear your changes!",
   "soundmaster.title": "Whitelisted Music Only",
   "soundmaster.toggletooltip": "When enabled, only whitelisted music will play.",
   "soundmaster.on": "ON",
