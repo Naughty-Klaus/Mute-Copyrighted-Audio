@@ -15,7 +15,7 @@ permissions:
 
 jobs:                                             
   build:                                          
-    runs-on: Windows
+    runs-on: ubuntu-latest
     steps:                                        
       - name: Check Environment Variables
         run: env
