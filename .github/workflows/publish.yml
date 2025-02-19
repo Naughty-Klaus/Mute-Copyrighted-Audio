@@ -46,11 +46,12 @@ jobs:
           
           github-tag: "v${{env.VERSION}}"
           github-token: "${{env.GITHUB_TOKEN}}"
+          github-generate-changelog: true
 
           name: "${{env.RELEASE_NAME}}"
           version: "${{env.VERSION}}"
           version-type: release
-          changelog-file: CHANGELOG.md
+          changelog-file: CHANGELOG.*
 
           loaders: fabric
           game-versions: "${{env.MINECRAFT_VERSION}}"
