@@ -23,4 +23,3 @@ bin/
 # fabric
 
 run/
-.github/workflows/publish.yml

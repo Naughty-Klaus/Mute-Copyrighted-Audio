@@ -4,20 +4,17 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.util.Identifier;
 import net.naughtyklaus.fabric.client.SoundmasterClient;
 
 @Environment(EnvType.CLIENT)
 public class HoverableButton extends ButtonWidget {
-    protected boolean isPressed = false;
-
     private final Identifier ON_TEXTURE;
     private final Identifier OFF_TEXTURE;
     private final Identifier ON_HOVER_TEXTURE;
     private final Identifier OFF_HOVER_TEXTURE;
-
+    protected boolean isPressed = false;
     String buttonId;
 
     public HoverableButton(String buttonId, int x, int y, int width, int height, PressAction pressAction) {

@@ -5,8 +5,8 @@ on: [ pull_request, workflow_dispatch ]           #When your GitHub Action will 
 env:                                              
   MINECRAFT_VERSION: 1.20.1
   JAVA_VERSION: 17      
-  VERSION: 1.0+1.20.1  
-  RELEASE_NAME: Mute Copyrighted Audio 1.0 for Minecraft 1.20.1
+  VERSION: 1.1+1.20.1
+  RELEASE_NAME: Mute Copyrighted Audio 1.1 for Minecraft 1.20.1
   MODRINTH_TOKEN: ${{ secrets.PUBLISH_MODRINTH_TOKEN }}
   GITHUB_TOKEN: ${{ secrets.PUBLISH_GITHUB_TOKEN }}
 
@@ -37,20 +37,21 @@ jobs:
 
       - name: Build
         run: ./gradlew clean build
-        
+
       - name: Publish (Modrinth/GitHub)
-        uses: Kir-Antipov/mc-publish@v3.2                                   
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
-          modrinth-id: ZzYb2Aqb                                             
+          modrinth-id: ZzYb2Aqb
           modrinth-token: "${{env.MODRINTH_TOKEN}}"
           
           github-tag: "v${{env.VERSION}}"
           github-token: "${{env.GITHUB_TOKEN}}"
+          github-generate-changelog: true
 
-          name: "${{env.RELEASE_NAME}}"                             
+          name: "${{env.RELEASE_NAME}}"
           version: "${{env.VERSION}}"
           version-type: release
-          changelog-file: CHANGELOG.md                                      
+          changelog-file: CHANGELOG.*
 
           loaders: fabric
           game-versions: "${{env.MINECRAFT_VERSION}}"

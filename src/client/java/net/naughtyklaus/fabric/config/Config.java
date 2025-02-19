@@ -2,7 +2,10 @@ package net.naughtyklaus.fabric.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.naughtyklaus.fabric.client.Constants;
 import net.naughtyklaus.fabric.client.SoundmasterClient;
+import net.naughtyklaus.fabric.client.music.MusicEnumerator;
+import net.naughtyklaus.fabric.client.music.MusicEnumeratorPresets;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,8 +17,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static net.naughtyklaus.fabric.config.Soundmaster.DEFAULT_ALLOWED_MUSIC_FILES;
-
 public class Config {
     private static final Path DIR_PATH = Path.of("config");
     private static final String FILE_NAME = SoundmasterClient.NAMESPACE + ".json";
@@ -23,12 +24,41 @@ public class Config {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static Config instance = null;
+    private MusicEnumeratorPresets preset = MusicEnumeratorPresets.C418_ONLY;
+    private static Integer nextPreset = 1;
     public boolean muteCopyrightedAudio;
-    public ArrayList<String> allowedMusicFiles = new ArrayList<>();
+    public ArrayList<MusicEnumerator> allowedMusic = new ArrayList<>();
+
+    public final String modVersion;
+
+    private static boolean needsUpdate = false;
+
+    public static boolean isUpdateNeeded() {
+        return Config.needsUpdate;
+    }
+
+    public static void shouldUpdate(boolean update) {
+        Config.needsUpdate = update;
+    }
 
     public Config() {
         this.muteCopyrightedAudio = false;
-        allowedMusicFiles.addAll(Arrays.asList(DEFAULT_ALLOWED_MUSIC_FILES));
+        this.modVersion = Constants.MOD_VERSION;
+        allowedMusic.addAll(Arrays.asList(Soundmaster.DEFAULT_ALLOWED_MUSIC));
+    }
+
+    public void cyclePreset() {
+        preset = MusicEnumeratorPresets.values()[nextPreset];
+
+        this.allowedMusic.clear();
+        this.allowedMusic.addAll(Arrays.asList(preset.getPresetMusic()));
+
+        shouldUpdate(true);
+
+        if(Config.nextPreset == MusicEnumeratorPresets.values().length - 1)
+            Config.nextPreset = 0;
+        else
+            Config.nextPreset++;
     }
 
     public static boolean doesMuteCopyrightedAudio() {
@@ -40,13 +70,14 @@ public class Config {
         Config.save();
     }
 
-    public static void addAllowedMusicFile(String s) {
-        instance.allowedMusicFiles.add(s);
+    public static void addAllowedMusicByFile(String s, String namespace, String author, String title) {
+        MusicEnumerator e = MusicEnumerator.findByFile(s);
+        instance.allowedMusic.add(e != null ? e : new MusicEnumerator(namespace, author, title, s));
         Config.save();
     }
 
-    public static void removeAllowedMusicFile(String s) {
-        instance.allowedMusicFiles.remove(s);
+    public static void removeAllowedMusic(MusicEnumerator e) {
+        instance.allowedMusic.remove(e);
         Config.save();
     }
 
@@ -96,9 +127,7 @@ public class Config {
             Path backupFile = file.resolveSibling(BACKUP_FILE_NAME);
             Files.move(file, backupFile, StandardCopyOption.ATOMIC_MOVE,
                     StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-
-        }
+        } catch (IOException e) {}
     }
 
     public static void save() {
@@ -118,6 +147,15 @@ public class Config {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isMusicAllowed(String namespace, String path) {
+        for (MusicEnumerator e : allowedMusic) {
+            if (e.getNamespace().equalsIgnoreCase(namespace) &&
+                    Arrays.asList(e.getFiles()).contains(path))
+                return true;
+        }
+        return false;
     }
 }
 
