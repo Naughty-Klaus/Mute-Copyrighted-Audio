@@ -6,5 +6,6 @@
   "soundmaster.title": "Whitelisted Music Only",
   "soundmaster.toggletooltip": "When enabled, only whitelisted music will play.",
   "soundmaster.on": "ON",
-  "soundmaster.off": "OFF"
+  "soundmaster.off": "OFF",
+  "soundmaster.whitelistpresetlabel": "Whitelist Preset"
 }

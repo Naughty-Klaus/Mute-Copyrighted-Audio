@@ -73,7 +73,7 @@ public abstract class SoundOptionsScreenMixin extends Screen {
         this.optionButtons.addSingleOptionEntry(muteCopyrightedAudioOption);
 
         SimpleOption<String> audioWhitelistPresetOption = new SimpleOption<>(
-                "Whitelist Preset",
+                Text.translatable("soundmaster.whitelistpresetlabel").getString(),
                 SimpleOption.constantTooltip(Text.translatable("soundmaster.cyclepreset")),
                 (optionText, value) -> Text.literal(value),
                 new SimpleOption.PotentialValuesBasedCallbacks<>(List.of("C418", "Lena Raine", "Aaron Cherof", "Kumi Tanioka", "All Vanilla"), Codec.STRING),
