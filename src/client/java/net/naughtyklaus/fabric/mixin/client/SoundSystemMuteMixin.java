@@ -1,12 +1,36 @@
 package net.naughtyklaus.fabric.mixin.client;
 
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 NaughtyKlaus (https://github.com/Naughty-Klaus/)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.Sound;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;
-import net.minecraft.sound.SoundCategory;
 import net.naughtyklaus.fabric.config.Config;
-import net.naughtyklaus.fabric.config.Soundmaster;
+import net.naughtyklaus.fabric.util.Soundmaster;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,26 +49,14 @@ public abstract class SoundSystemMuteMixin {
     )
     private void onPlay(SoundInstance sound, CallbackInfo ci) {
         Sound sound2 = sound.getSound();
-        Config config = Config.get();
 
-        if (sound2 != null && sound2.getLocation() != null && sound.getCategory() == SoundCategory.MUSIC) {
-            String loc = sound2.getLocation().toString();
-            String[] split = loc.split(":");
-            String namespace = "";
-            String path = "";
-
-            if (split.length > 1) {
-                namespace = split[0];
-                path = split[1];
-
-                path = path.substring(path.lastIndexOf('/') + 1);
-            }
-            if (Config.doesMuteCopyrightedAudio()) {
-                boolean isAllowed = config.isMusicAllowed(namespace, path);
-
-                if (!isAllowed) {
+        if (Config.doesMuteCopyrightedAudio() && !Soundmaster.isWhitelisted(sound2, sound)) {
+            switch(sound.getCategory()) {
+                case MUSIC:
+                case AMBIENT:
+                case RECORDS:
                     ci.cancel();
-                }
+                    break;
             }
         }
     }
@@ -54,12 +66,13 @@ public abstract class SoundSystemMuteMixin {
         MinecraftClient client = MinecraftClient.getInstance();
 
         client.execute(() -> {
-            if (sound.getCategory() != null) {
-                if (sound.getCategory() == SoundCategory.MUSIC) {
-                    if (sound.getSound().getLocation() != null) {
+            switch (sound.getCategory()) {
+                case MUSIC:
+                case AMBIENT:
+                case RECORDS:
+                    if (sound.getSound().getLocation() != null)
                         Soundmaster.lastMusicSoundInst = sound;
-                    }
-                }
+                    break;
             }
         });
     }
