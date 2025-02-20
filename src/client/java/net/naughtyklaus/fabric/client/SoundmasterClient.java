@@ -32,7 +32,8 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
-import net.naughtyklaus.fabric.config.Config;
+import net.naughtyklaus.fabric.cfg.Config;
+import net.naughtyklaus.fabric.util.Constants;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;

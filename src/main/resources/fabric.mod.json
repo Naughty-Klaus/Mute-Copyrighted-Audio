@@ -13,7 +13,9 @@
     "client": [
       "net.naughtyklaus.fabric.client.SoundmasterClient"
     ],
-    "modmenu": [ "net.naughtyklaus.fabric.config.ModMenuIntegration" ]
+    "modmenu": [
+      "net.naughtyklaus.fabric.client.ModMenuIntegration"
+    ]
   },
   "mixins": [
     "soundmaster.mixins.json",

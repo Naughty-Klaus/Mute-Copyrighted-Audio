@@ -1,4 +1,4 @@
-package net.naughtyklaus.fabric.mixin.client;
+package net.naughtyklaus.fabric.mixin.ui;
 
 /*
  * MIT License
@@ -32,8 +32,8 @@ import net.minecraft.client.gui.screen.option.SoundOptionsScreen;
 import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
-import net.naughtyklaus.fabric.config.Config;
-import net.naughtyklaus.fabric.util.Soundmaster;
+import net.naughtyklaus.fabric.cfg.Config;
+import net.naughtyklaus.fabric.util.sfx.Soundmaster;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -43,7 +43,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-import static net.naughtyklaus.fabric.util.Soundmaster.lastMusicSoundInst;
+import static net.naughtyklaus.fabric.util.sfx.Soundmaster.lastMusicSoundInst;
 
 @Mixin(SoundOptionsScreen.class)
 public abstract class SoundOptionsScreenMixin extends Screen {
@@ -57,6 +57,8 @@ public abstract class SoundOptionsScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     private void addCustomButtons(CallbackInfo ci) {
+        Config config = Config.get();
+
         Text text = Text.translatable("soundmaster.title");
 
         SimpleOption<Boolean> muteCopyrightedAudioOption = new SimpleOption<>(
@@ -69,6 +71,17 @@ public abstract class SoundOptionsScreenMixin extends Screen {
         );
 
         this.optionButtons.addSingleOptionEntry(muteCopyrightedAudioOption);
+
+        SimpleOption<String> audioWhitelistPresetOption = new SimpleOption<>(
+                "Whitelist Preset",
+                SimpleOption.constantTooltip(Text.translatable("soundmaster.cyclepreset")),
+                (optionText, value) -> Text.literal(value),
+                new SimpleOption.PotentialValuesBasedCallbacks<>(List.of("C418", "Lena Raine", "Aaron Cherof", "Kumi Tanioka", "All Vanilla"), Codec.STRING),
+                config.lastSelectedPreset.getAuthor(),
+                this::handlePresetOptionChange
+        );
+
+        this.optionButtons.addSingleOptionEntry(audioWhitelistPresetOption);
     }
 
     @Unique
@@ -83,6 +96,12 @@ public abstract class SoundOptionsScreenMixin extends Screen {
                     MinecraftClient.getInstance().getSoundManager().stop(lastMusicSoundInst);
                     break;
             }
+    }
+
+    @Unique
+    private void handlePresetOptionChange(String newValue) {
+        Config config = Config.get();
+        config.cyclePreset();
     }
 }
 

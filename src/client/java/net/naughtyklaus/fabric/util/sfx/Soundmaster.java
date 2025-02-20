@@ -1,4 +1,4 @@
-package net.naughtyklaus.fabric.util;
+package net.naughtyklaus.fabric.util.sfx;
 
 /*
  * MIT License
@@ -25,10 +25,10 @@ package net.naughtyklaus.fabric.util;
  *
  */
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.Sound;
 import net.minecraft.client.sound.SoundInstance;
-import net.naughtyklaus.fabric.client.music.MusicEnumerator;
-import net.naughtyklaus.fabric.config.Config;
+import net.naughtyklaus.fabric.cfg.Config;
 
 import java.util.*;
 
@@ -39,16 +39,20 @@ public class Soundmaster {
         List<MusicEnumerator> combinedList = new ArrayList<>();
         Collections.addAll(combinedList, MusicEnumerator.findByAuthor("minecraft", "C418"));
 
-        // Uncomment this to add the remainder of the vanilla Minecraft songs as music allowed by default.
-        /*
-        Collections.addAll(combinedList, MusicEnumerator.findByAuthor("minecraft", "Lena Raine"));
-        Collections.addAll(combinedList, MusicEnumerator.findByAuthor("minecraft", "Aaron Cherof"));
-        Collections.addAll(combinedList, MusicEnumerator.findByAuthor("minecraft", "Kumi Tanioka"));
-         */
-
         Set<MusicEnumerator> uniqueMusicSet = new HashSet<>(combinedList);
 
         DEFAULT_ALLOWED_MUSIC = uniqueMusicSet.toArray(new MusicEnumerator[0]);
+    }
+
+    public static void check() {
+        if (Config.doesMuteCopyrightedAudio() && !Soundmaster.isWhitelisted(lastMusicSoundInst))
+            switch (lastMusicSoundInst.getCategory()) {
+                case MUSIC:
+                case AMBIENT:
+                case RECORDS:
+                    MinecraftClient.getInstance().getSoundManager().stop(lastMusicSoundInst);
+                    break;
+            }
     }
 
     public static boolean isWhitelisted(SoundInstance inst) {
@@ -67,11 +71,9 @@ public class Soundmaster {
                 path = path.substring(path.lastIndexOf('/') + 1);
             }
 
-            System.out.println("Something went right.");
             return config.isMusicAllowed(namespace, path);
         }
 
-        System.out.println("Something didn't go right.");
         return false;
     }
 
@@ -91,10 +93,9 @@ public class Soundmaster {
                 path = path.substring(path.lastIndexOf('/') + 1);
             }
 
-            System.out.println("Something went right x2.");
             return config.isMusicAllowed(namespace, path);
         }
-        System.out.println("Something didn't go right x2.");
+
         return false;
     }
 

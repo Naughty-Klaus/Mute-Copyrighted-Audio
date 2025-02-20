@@ -32,7 +32,7 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.text.Text;
-import net.naughtyklaus.fabric.config.Config;
+import net.naughtyklaus.fabric.cfg.Config;
 import net.naughtyklaus.fabric.ui.buttons.HoverableButton;
 
 public class SoundmasterOptionsScreen extends Screen {
@@ -111,7 +111,7 @@ public class SoundmasterOptionsScreen extends Screen {
             config.cyclePreset();
         });
 
-        button.setTooltip(Tooltip.of(Text.translatable("soundmaster.resetsettings")));
+        button.setTooltip(Tooltip.of(Text.translatable("soundmaster.cyclepreset")));
 
         this.addDrawableChild(button);
     }

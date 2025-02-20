@@ -28,8 +28,8 @@ package net.naughtyklaus.fabric.ui;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ElementListWidget;
-import net.naughtyklaus.fabric.client.music.MusicEnumerator;
-import net.naughtyklaus.fabric.config.Config;
+import net.naughtyklaus.fabric.util.sfx.MusicEnumerator;
+import net.naughtyklaus.fabric.cfg.Config;
 
 import java.util.ArrayList;
 import java.util.Comparator;

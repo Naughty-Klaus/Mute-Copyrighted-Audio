@@ -1,4 +1,4 @@
-package net.naughtyklaus.fabric.client.music;
+package net.naughtyklaus.fabric.util.sfx;
 
 /*
  * MIT License

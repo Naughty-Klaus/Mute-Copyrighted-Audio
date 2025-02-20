@@ -1,4 +1,4 @@
-package net.naughtyklaus.fabric.client.music;
+package net.naughtyklaus.fabric.util.sfx;
 
 /*
  * MIT License
@@ -32,7 +32,7 @@ public enum MusicEnumeratorPresets {
     LENA_RAINE_ONLY("minecraft", "Lena Raine"),
     AARON_CHEROF_ONLY("minecraft", "Aaron Cherof"),
     KUMI_TANIOKA_ONLY("minecraft", "Kumi Tanioka"),
-    ALL("minecraft", "C418", "Lena Raine", "Aaron Cherof", "Kumi Tanioka");
+    ALL("minecraft", "All Vanilla", "C418", "Lena Raine", "Aaron Cherof", "Kumi Tanioka");
 
     MusicEnumeratorPresets(String namespace, String... authors) {
         List<MusicEnumerator> combinedList = new ArrayList<>();
@@ -42,10 +42,21 @@ public enum MusicEnumeratorPresets {
 
         Set<MusicEnumerator> uniqueMusicSet = new HashSet<>(combinedList);
 
+        this.author = authors[0];
         this.music = uniqueMusicSet.toArray(new MusicEnumerator[0]);
     }
 
     private final MusicEnumerator[] music;
+    public final String author;
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public MusicEnumeratorPresets next() {
+        MusicEnumeratorPresets[] values = values();
+        return values[(this.ordinal() + 1) % values.length]; // Loops back to start
+    }
 
     public MusicEnumerator[] getPresetMusic() {
         return music;

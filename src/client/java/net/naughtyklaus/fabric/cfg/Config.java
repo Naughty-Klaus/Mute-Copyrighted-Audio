@@ -1,4 +1,4 @@
-package net.naughtyklaus.fabric.config;
+package net.naughtyklaus.fabric.cfg;
 
 /*
  * MIT License
@@ -52,11 +52,12 @@ package net.naughtyklaus.fabric.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.naughtyklaus.fabric.client.Constants;
+import net.minecraft.client.MinecraftClient;
+import net.naughtyklaus.fabric.util.Constants;
 import net.naughtyklaus.fabric.client.SoundmasterClient;
-import net.naughtyklaus.fabric.client.music.MusicEnumerator;
-import net.naughtyklaus.fabric.client.music.MusicEnumeratorPresets;
-import net.naughtyklaus.fabric.util.Soundmaster;
+import net.naughtyklaus.fabric.util.sfx.MusicEnumerator;
+import net.naughtyklaus.fabric.util.sfx.MusicEnumeratorPresets;
+import net.naughtyklaus.fabric.util.sfx.Soundmaster;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,6 +69,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static net.naughtyklaus.fabric.util.sfx.Soundmaster.lastMusicSoundInst;
+
 public class Config {
     private static final Path DIR_PATH = Path.of("config");
     private static final String FILE_NAME = SoundmasterClient.NAMESPACE + ".json";
@@ -75,8 +78,7 @@ public class Config {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static Config instance = null;
-    private MusicEnumeratorPresets preset = MusicEnumeratorPresets.C418_ONLY;
-    private static Integer nextPreset = 1;
+    public MusicEnumeratorPresets lastSelectedPreset = MusicEnumeratorPresets.C418_ONLY;
     public boolean muteCopyrightedAudio;
     public ArrayList<MusicEnumerator> allowedMusic = new ArrayList<>();
 
@@ -99,17 +101,14 @@ public class Config {
     }
 
     public void cyclePreset() {
-        preset = MusicEnumeratorPresets.values()[nextPreset];
+        boolean reset = lastSelectedPreset.ordinal() == MusicEnumeratorPresets.values().length - 1;
+        lastSelectedPreset = MusicEnumeratorPresets.values()[reset ? 0 : lastSelectedPreset.ordinal() + 1];
 
         this.allowedMusic.clear();
-        this.allowedMusic.addAll(Arrays.asList(preset.getPresetMusic()));
+        this.allowedMusic.addAll(Arrays.asList(lastSelectedPreset.getPresetMusic()));
 
         shouldUpdate(true);
-
-        if(Config.nextPreset == MusicEnumeratorPresets.values().length - 1)
-            Config.nextPreset = 0;
-        else
-            Config.nextPreset++;
+        Soundmaster.check();
     }
 
     public static boolean doesMuteCopyrightedAudio() {

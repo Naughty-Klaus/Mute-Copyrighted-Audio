@@ -31,16 +31,16 @@ import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.text.Text;
-import net.naughtyklaus.fabric.client.music.MusicEnumerator;
-import net.naughtyklaus.fabric.config.Config;
-import net.naughtyklaus.fabric.util.Soundmaster;
+import net.naughtyklaus.fabric.util.sfx.MusicEnumerator;
+import net.naughtyklaus.fabric.cfg.Config;
+import net.naughtyklaus.fabric.util.sfx.Soundmaster;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static net.naughtyklaus.fabric.util.Soundmaster.lastMusicSoundInst;
+import static net.naughtyklaus.fabric.util.sfx.Soundmaster.lastMusicSoundInst;
 
 public class ListEntry extends ElementListWidget.Entry<ListEntry> {
     public final String label;

@@ -1,4 +1,4 @@
-package net.naughtyklaus.fabric.mixin.client;
+package net.naughtyklaus.fabric.mixin.sfx;
 
 /*
  * MIT License
@@ -29,8 +29,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.Sound;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;
-import net.naughtyklaus.fabric.config.Config;
-import net.naughtyklaus.fabric.util.Soundmaster;
+import net.naughtyklaus.fabric.cfg.Config;
+import net.naughtyklaus.fabric.util.sfx.Soundmaster;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

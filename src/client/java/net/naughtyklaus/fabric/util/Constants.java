@@ -1,4 +1,4 @@
-package net.naughtyklaus.fabric.client;
+package net.naughtyklaus.fabric.util;
 
 /*
  * MIT License
