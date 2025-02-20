@@ -1,11 +1,63 @@
-package net.naughtyklaus.fabric.config;
+package net.naughtyklaus.fabric.cfg;
+
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-2024 AppleTheGolden
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 NaughtyKlaus (https://github.com/Naughty-Klaus/)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.naughtyklaus.fabric.client.Constants;
+import net.minecraft.client.MinecraftClient;
+import net.naughtyklaus.fabric.util.Constants;
 import net.naughtyklaus.fabric.client.SoundmasterClient;
-import net.naughtyklaus.fabric.client.music.MusicEnumerator;
-import net.naughtyklaus.fabric.client.music.MusicEnumeratorPresets;
+import net.naughtyklaus.fabric.util.sfx.MusicEnumerator;
+import net.naughtyklaus.fabric.util.sfx.MusicEnumeratorPresets;
+import net.naughtyklaus.fabric.util.sfx.Soundmaster;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,6 +69,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static net.naughtyklaus.fabric.util.sfx.Soundmaster.lastMusicSoundInst;
+
 public class Config {
     private static final Path DIR_PATH = Path.of("config");
     private static final String FILE_NAME = SoundmasterClient.NAMESPACE + ".json";
@@ -24,8 +78,7 @@ public class Config {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static Config instance = null;
-    private MusicEnumeratorPresets preset = MusicEnumeratorPresets.C418_ONLY;
-    private static Integer nextPreset = 1;
+    public MusicEnumeratorPresets lastSelectedPreset = MusicEnumeratorPresets.C418_ONLY;
     public boolean muteCopyrightedAudio;
     public ArrayList<MusicEnumerator> allowedMusic = new ArrayList<>();
 
@@ -48,17 +101,14 @@ public class Config {
     }
 
     public void cyclePreset() {
-        preset = MusicEnumeratorPresets.values()[nextPreset];
+        boolean reset = lastSelectedPreset.ordinal() == MusicEnumeratorPresets.values().length - 1;
+        lastSelectedPreset = MusicEnumeratorPresets.values()[reset ? 0 : lastSelectedPreset.ordinal() + 1];
 
         this.allowedMusic.clear();
-        this.allowedMusic.addAll(Arrays.asList(preset.getPresetMusic()));
+        this.allowedMusic.addAll(Arrays.asList(lastSelectedPreset.getPresetMusic()));
 
         shouldUpdate(true);
-
-        if(Config.nextPreset == MusicEnumeratorPresets.values().length - 1)
-            Config.nextPreset = 0;
-        else
-            Config.nextPreset++;
+        Soundmaster.check();
     }
 
     public static boolean doesMuteCopyrightedAudio() {

@@ -1,7 +1,34 @@
-package net.naughtyklaus.fabric.config;
+package net.naughtyklaus.fabric.util.sfx;
 
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 NaughtyKlaus (https://github.com/Naughty-Klaus/)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.Sound;
 import net.minecraft.client.sound.SoundInstance;
-import net.naughtyklaus.fabric.client.music.MusicEnumerator;
+import net.naughtyklaus.fabric.cfg.Config;
 
 import java.util.*;
 
@@ -12,16 +39,64 @@ public class Soundmaster {
         List<MusicEnumerator> combinedList = new ArrayList<>();
         Collections.addAll(combinedList, MusicEnumerator.findByAuthor("minecraft", "C418"));
 
-        // Uncomment this to add the remainder of the vanilla Minecraft songs as music allowed by default.
-        /*
-        Collections.addAll(combinedList, MusicEnumerator.findByAuthor("minecraft", "Lena Raine"));
-        Collections.addAll(combinedList, MusicEnumerator.findByAuthor("minecraft", "Aaron Cherof"));
-        Collections.addAll(combinedList, MusicEnumerator.findByAuthor("minecraft", "Kumi Tanioka"));
-         */
-
         Set<MusicEnumerator> uniqueMusicSet = new HashSet<>(combinedList);
 
         DEFAULT_ALLOWED_MUSIC = uniqueMusicSet.toArray(new MusicEnumerator[0]);
+    }
+
+    public static void check() {
+        if (Config.doesMuteCopyrightedAudio() && !Soundmaster.isWhitelisted(lastMusicSoundInst))
+            switch (lastMusicSoundInst.getCategory()) {
+                case MUSIC:
+                case AMBIENT:
+                case RECORDS:
+                    MinecraftClient.getInstance().getSoundManager().stop(lastMusicSoundInst);
+                    break;
+            }
+    }
+
+    public static boolean isWhitelisted(SoundInstance inst) {
+        Config config = Config.get();
+
+        if (inst != null && inst.getSound() != null) {
+            String loc = inst.getSound().getLocation().toString();
+            String[] split = loc.split(":");
+            String namespace = "";
+            String path = "";
+
+            if (split.length > 1) {
+                namespace = split[0];
+                path = split[1];
+
+                path = path.substring(path.lastIndexOf('/') + 1);
+            }
+
+            return config.isMusicAllowed(namespace, path);
+        }
+
+        return false;
+    }
+
+    public static boolean isWhitelisted(Sound sound, SoundInstance inst) {
+        Config config = Config.get();
+
+        if (sound != null && sound.getLocation() != null) {
+            String loc = sound.getLocation().toString();
+            String[] split = loc.split(":");
+            String namespace = "";
+            String path = "";
+
+            if (split.length > 1) {
+                namespace = split[0];
+                path = split[1];
+
+                path = path.substring(path.lastIndexOf('/') + 1);
+            }
+
+            return config.isMusicAllowed(namespace, path);
+        }
+
+        return false;
     }
 
     /*
