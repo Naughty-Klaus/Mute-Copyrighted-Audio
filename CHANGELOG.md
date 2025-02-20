@@ -2,6 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## 1.1+1.20.1
+## 1.0.01+1.20.1
 
-Added presets, and grouping music files into common names.
+Added option to Minecraft's "Music & Sounds" options screen to cycle between 
+presets. This will clear any custom additions made via Mod Menu configuration!

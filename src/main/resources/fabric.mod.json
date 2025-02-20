@@ -3,7 +3,7 @@
   "id": "soundmaster",
   "version": "${version}",
   "name": "Mute Copyrighted Audio",
-  "description": "Add an option to sound options to mute music that triggers YouTube's ContentID system.",
+  "description": "Creates a whitelist so that players can only play music that they have approved. Presets available.",
   "authors": ["NaughtyKlaus"],
   "contact": {},
   "license": "All-Rights-Reserved",
